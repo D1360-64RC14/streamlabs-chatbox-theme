@@ -11,10 +11,8 @@ class Utils {
 	}
 	
 	hexToHSL(hex) {
-		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		var r = parseInt(result[1], 16);
-		var g = parseInt(result[2], 16);
-		var b = parseInt(result[3], 16);
+		var r, g, b;
+		[r, g, b] = this.hexToRGB(hex);
 		r /= 255, g /= 255, b /= 255;
 		var max = Math.max(r, g, b), min = Math.min(r, g, b);
 		var h, s, l = (max + min) / 2;
@@ -32,6 +30,25 @@ class Utils {
 		}
 		var HSL = [h*360, s*100, l*100];
 		return HSL.map(k => Math.round(k));
+	}
+	hexToRGB(hex){
+		var result, r, g, b;
+		result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		r = parseInt(result[1], 16);
+		g = parseInt(result[2], 16);
+		b = parseInt(result[3], 16);
+		return [r, g, b];
+	}
+	isLight(hex) {
+		var r, g, b, hsp;
+		[r, g, b] = this.hexToRGB(hex);
+		// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+		hsp = Math.sqrt(
+		0.299 * (r * r) +
+		0.587 * (g * g) +
+		0.114 * (b * b)
+		);
+		return hsp > 127.5 ? true : false;
 	}
 }
 /* ====================== */
@@ -64,9 +81,7 @@ class EachMessageThings {
 	dynamicNickColors(){
 		var userColor = this.messageObj.detail.tags.color;
 		
-		var userColorHSL = utils.hexToHSL(userColor);
-		if(userColorHSL[2] >= 50 || userColorHSL[1] >= 50){
-			console.log('asdasdasd')
+		if(utils.isLight(userColor)){
 			utils.getMessage(this.messageObj).children[0].children[0].classList.add('dark');
 		}
 	}
