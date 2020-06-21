@@ -1,3 +1,5 @@
+let blackList = ['streamlabs', 'pretzelrocks', 'nightbot', 'streamelements'];
+
 /* ====================== *
  * Utilitários do script  *
  * ====================== */
@@ -92,6 +94,15 @@ class EachMessageThings {
 			chatElement.removeChild(chatElement.firstElementChild)
 		}
 	}
+	
+	removeIfInBlacklist(){
+		let userName = this.messageObj.detail.from;
+		if(blackList.indexOf(userName) >= 0){
+			let child = utils.getMessage(this.messageObj);
+			let element = document.querySelector('div[id="log"]');
+			element.removeChild(child);
+		}
+	}
 }
 /* ============================ */
 
@@ -114,7 +125,10 @@ document.addEventListener('onEventReceived', function(obj) {
 	
 	eachMessageThings.dynamicNickColors();
 	
+	eachMessageThings.removeIfInBlacklist();
+	
 	eachMessageThings.optimizeChat();
+	
 });
 
 document.addEventListener('onClearChat', event => {
