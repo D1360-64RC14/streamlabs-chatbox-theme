@@ -4,12 +4,10 @@
 
 <!-- chat item -->
 <script type="text/template" id="chatlist_item"> 
-<div data-from="{from}" data-id="{messageId}" class="frame">
-	<header>
-		<span class="user" style="background-color: {color}">{from}</span>
-		<span class="badges"></span>
-	</header>
-	<span class="message">{message}</span>
-</div>
-
+	<div data-display-name="{from}" data-message-id="{messageId}" class="frame" style="border-color: {color};">
+		<header>
+			<span class="user" style="background-color: {color}">{from}</span>
+		</header>
+		<span class="message">{message}</span>
+	</div>
 </script>
